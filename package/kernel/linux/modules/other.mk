@@ -105,6 +105,38 @@ endef
 
 $(eval $(call KernelPackage,bluetooth-hci-h4p))
 
+define KernelPackage/ieee802154
+  SUBMENU:=$(OTHER_MENU)
+  TITLE:=IEEE Std 802.15.4 Low-Rate Wireless Personal Area Networks support
+  KCONFIG:=CONFIG_IEEE802154
+  FILES:=$(LINUX_DIR)/net/ieee802154/ieee802154.ko \
+	$(LINUX_DIR)/net/ieee802154/af_802154.ko
+  AUTOLOAD:=$(call AutoProbe,ieee802154 af_802154)
+endef
+
+define KernelPackage/ieee802154/description
+ Kernel Modules support for IEEE-802.15.4
+endef
+
+$(eval $(call KernelPackage,ieee802154))
+
+define KernelPackage/mac802154
+  SUBMENU:=$(OTHER_MENU)
+  TITLE:=Generic IEEE 802.15.4 Soft Networking Stack (mac802154)
+  DEPENDS:= +kmod-ieee802154 +kmod-lib-crc-ccitt +kmod-crypto-aes +kmod-crypto-ccm +kmod-crypto-ctr +kmod-crypto-authenc
+  KCONFIG:= \
+	CONFIG_MAC802154 \
+	CONFIG_IEEE802154_DRIVERS=y
+  FILES:=$(LINUX_DIR)/net/mac802154/mac802154.ko
+  AUTOLOAD:=$(call AutoProbe,mac802154)
+endef
+
+define KernelPackage/ieee802154/description
+ Kernel Modules support for Generic IEEE 802.15.4 Soft Networking Stack (mac802154)
+endef
+
+$(eval $(call KernelPackage,mac802154))
+
 
 define KernelPackage/eeprom-93cx6
   SUBMENU:=$(OTHER_MENU)
@@ -968,3 +1000,18 @@ define KernelPackage/gpio-beeper/description
 endef
 
 $(eval $(call KernelPackage,gpio-beeper))
+
+define KernelPackage/cc2520
+  SUBMENU:=$(OTHER_MENU)
+  TITLE:=TI CC2520 driver support
+  DEPENDS:= +kmod-mac802154
+  KCONFIG:=CONFIG_IEEE802154_CC2520
+  FILES:=$(LINUX_DIR)/drivers/net/ieee802154/cc2520.ko
+  AUTOLOAD:=$(call AutoProbe,cc2520)
+endef
+
+define KernelPackage/cc2520/description
+ Kernel module support for TI cc2520 ieee-802.15.4 radio
+endef
+
+$(eval $(call KernelPackage,cc2520))
