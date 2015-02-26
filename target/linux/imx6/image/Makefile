@@ -31,6 +31,7 @@ define Image/BuildKernel/Template
 		$(BIN_DIR)/$(IMG_PREFIX)-zImage, \
 		$(BIN_DIR)/$(IMG_PREFIX)-uImage \
 	)
+	$(CP) $(DTS_DIR)/imx6q-wandboard-revb1.dtb $(BIN_DIR)/imx6q-wandboard-revb1.dtb
 
  ifneq ($(CONFIG_TARGET_ROOTFS_INITRAMFS),)
 	$(CP) $(KDIR)/zImage-initramfs $(BIN_DIR)/$(IMG_PREFIX)-zImage-initramfs

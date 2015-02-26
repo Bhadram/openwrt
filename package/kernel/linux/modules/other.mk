@@ -115,7 +115,7 @@ define KernelPackage/ieee802154
 endef
 
 define KernelPackage/ieee802154/description
- Kernel Modules support for IEEE-802.15.4
+ Kernel Modules support for IEEE Std 802.15.4 Low-Rate Wireless Personal Area Networks
 endef
 
 $(eval $(call KernelPackage,ieee802154))
@@ -131,7 +131,7 @@ define KernelPackage/mac802154
   AUTOLOAD:=$(call AutoProbe,mac802154)
 endef
 
-define KernelPackage/ieee802154/description
+define KernelPackage/mac802154/description
  Kernel Modules support for Generic IEEE 802.15.4 Soft Networking Stack (mac802154)
 endef
 
@@ -1001,7 +1001,7 @@ endef
 
 $(eval $(call KernelPackage,gpio-beeper))
 
-define KernelPackage/cc2520
+define KernelPackage/ieee802154_cc2520
   SUBMENU:=$(OTHER_MENU)
   TITLE:=TI CC2520 driver support
   DEPENDS:= +kmod-mac802154
@@ -1010,8 +1010,27 @@ define KernelPackage/cc2520
   AUTOLOAD:=$(call AutoProbe,cc2520)
 endef
 
-define KernelPackage/cc2520/description
+define KernelPackage/ieee802154_cc2520/description
  Kernel module support for TI cc2520 ieee-802.15.4 radio
 endef
 
-$(eval $(call KernelPackage,cc2520))
+$(eval $(call KernelPackage,ieee802154_cc2520))
+
+define KernelPackage/ieee802154_6lowpan
+  SUBMENU:=$(OTHER_MENU)
+  TITLE:=IEEE-802.15.4 6LoWPAN support
+  DEPENDS:= +kmod-ieee802154 @!LINUX_3.19
+  KCONFIG:= \
+  CONFIG_6LOWPAN=m \
+  CONFIG_IEEE802154_6LOWPAN=m
+  FILES:= \
+	$(LINUX_DIR)/net/ieee802154/ieee802154_6lowpan.ko \
+	$(LINUX_DIR)/net/6lowpan/6lowpan.ko
+	AUTOLOAD:=$(call AutoProbe,ieee802154_6lowpan)
+endef
+
+define KernelPackage/ieee802154_6lowpan/description
+ Kernel support for 6LoWPAN over IEEE-802.15.4 devices
+endef
+
+$(eval $(call KernelPackage,ieee802154_6lowpan))
