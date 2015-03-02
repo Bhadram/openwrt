@@ -1,0 +1,82 @@
+From 245905872dae9c2b92132ac7e86dc3a6a15be835 Mon Sep 17 00:00:00 2001
+From: Varka Bhadram <varkab@cdac.in>
+Date: Tue, 3 Mar 2015 16:29:32 +0530
+Subject: [PATCH 3/3] dts: imx6q: spi: cc2520: enable cc2520 radio
+
+
+Signed-off-by: Varka Bhadram <varkab@cdac.in>
+---
+ arch/arm/boot/dts/imx6q-wandboard-revb1.dts |   27 +++++++++++++++++++++++++++
+ arch/arm/boot/dts/imx6q.dtsi                |   21 +++++++++++++++++++++
+ 2 files changed, 48 insertions(+)
+
+diff --git a/arch/arm/boot/dts/imx6q-wandboard-revb1.dts b/arch/arm/boot/dts/imx6q-wandboard-revb1.dts
+index 20bf3c2..6bd5476 100644
+--- a/arch/arm/boot/dts/imx6q-wandboard-revb1.dts
++++ b/arch/arm/boot/dts/imx6q-wandboard-revb1.dts
+@@ -24,3 +24,30 @@
+ &sata {
+ 	status = "okay";
+ };
++
++&ecspi1 {
++	fsl,spi-num-chipselects = <1>;
++	cs-gpios = <&gpio7 8 0>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&ecspi1_pinctrl>;
++	status = "okay";
++
++	cc2520@0 {
++		compatible = "ti,cc2520";
++		reg = <0>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		spi-max-frequency = <4000000>;
++		mode = <1>;
++
++		pinctrl-names = "default";
++		pinctrl-0 = <&cc2520_pins>;
++
++		fifo-gpio = <&gpio6 31 0>;
++		fifop-gpio = <&gpio1 24 0>;
++		sfd-gpio = <&gpio4 5 0>;
++		cca-gpio = <&gpio3 11 0>;
++		vreg-gpio = <&gpio3 26 0>;
++		reset-gpio = <&gpio3 27 0>;
++	};
++};
+diff --git a/arch/arm/boot/dts/imx6q.dtsi b/arch/arm/boot/dts/imx6q.dtsi
+index 93ec79b..fb5212a 100644
+--- a/arch/arm/boot/dts/imx6q.dtsi
++++ b/arch/arm/boot/dts/imx6q.dtsi
+@@ -139,6 +139,27 @@
+ 						>;
+ 					};
+ 				};
++				ecspi1 {
++					ecspi1_pinctrl: ecspi1_grp {
++						fsl,pins = <
++							MX6QDL_PAD_EIM_D17__ECSPI1_MISO 0x100b1
++							MX6QDL_PAD_EIM_D18__ECSPI1_MOSI 0x100b1
++							MX6QDL_PAD_EIM_D16__ECSPI1_SCLK 0x100b1
++							MX6QDL_PAD_SD3_RST__GPIO7_IO08 0xb0b0
++						>;
++					};
++				};
++				cc2520_pinmux {
++					cc2520_pins: cc2520_pinctrl {
++						fsl,pins = <
++							MX6QDL_PAD_EIM_BCLK__GPIO6_IO31 0x80000000
++							MX6QDL_PAD_ENET_RX_ER__GPIO1_IO24 0x80000000
++							MX6QDL_PAD_EIM_D26__GPIO3_IO26 0x80000000
++							MX6QDL_PAD_EIM_DA11__GPIO3_IO11 0x80000000
++							MX6QDL_PAD_EIM_D27__GPIO3_IO27 0x80000000
++						>;
++					};
++				};
+ 			};
+ 		};
+ 
+-- 
+1.7.9.5
+
